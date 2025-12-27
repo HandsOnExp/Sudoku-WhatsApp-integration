@@ -90,7 +90,6 @@ fun GameScreen(
     val isPaused by viewModel.isPaused.collectAsState()
     val isGameWon by viewModel.isGameWon.collectAsState()
     val mistakes by viewModel.mistakes.collectAsState()
-    val isGameOver by viewModel.isGameOver.collectAsState()
     val wrongFlash by viewModel.wrongNumberFlash.collectAsState()
 
     // Start new game if board is null or difficulty changed
@@ -164,7 +163,7 @@ fun GameScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // Pause overlay or game content
-                if (isPaused && !isGameWon && !isGameOver) {
+                if (isPaused && !isGameWon) {
                     PausedOverlay()
                 } else {
                     Column(
@@ -180,7 +179,7 @@ fun GameScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "טעויות: $mistakes/${GameViewModel.MAX_MISTAKES}",
+                                text = "טעויות: $mistakes",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = if (mistakes >= 2) MaterialTheme.colorScheme.error
@@ -239,17 +238,6 @@ fun GameScreen(
             )
         }
 
-        // Game Over dialog
-        if (isGameOver) {
-            GameOverDialog(
-                mistakes = mistakes,
-                onDismiss = onNavigateBack,
-                onNewGame = {
-                    board?.difficulty?.let { viewModel.startNewGame(it) }
-                }
-            )
-        }
-
         // Exit confirmation dialog
         if (showExitDialog) {
             ExitConfirmationDialog(
@@ -267,7 +255,6 @@ fun GameScreen(
         currentReminder?.let { reminder ->
             ReminderDialog(
                 message = reminder.message,
-                currentPosition = 1,
                 totalCount = reminderQueue.size,
                 onDismiss = { reminderManager.dismissReminder() }
             )
@@ -362,63 +349,11 @@ private fun WinDialog(
 }
 
 /**
- * Game Over dialog when player makes too many mistakes
- */
-@Composable
-private fun GameOverDialog(
-    mistakes: Int,
-    onDismiss: () -> Unit,
-    onNewGame: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "😞 המשחק נגמר",
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        text = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "עשית $mistakes טעויות",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "נסה שוב!",
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onNewGame) {
-                Text("משחק חדש")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("חזור")
-            }
-        }
-    )
-}
-
-/**
  * Reminder dialog shown at configured intervals
  */
 @Composable
 private fun ReminderDialog(
     message: String,
-    currentPosition: Int,
     totalCount: Int,
     onDismiss: () -> Unit
 ) {
@@ -437,7 +372,7 @@ private fun ReminderDialog(
                 // Show counter if multiple reminders in queue
                 if (totalCount > 1) {
                     Text(
-                        text = "תזכורת $currentPosition מתוך $totalCount",
+                        text = "תזכורת 1 מתוך $totalCount",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier.padding(top = 4.dp)

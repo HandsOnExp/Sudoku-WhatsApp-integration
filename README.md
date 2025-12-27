@@ -13,7 +13,7 @@ This app provides a distraction-free Sudoku experience with customizable reminde
 - Six difficulty levels: Beginner (45 givens), Easy (40), Medium (35), Hard (30), Expert (25), Extreme (20)
 - Smart number highlighting - tap a cell to highlight all occurrences of that number
 - Real-time error detection and validation
-- Mistake counter (max 3 mistakes per game)
+- Mistake counter
 - Game timer
 - Pause/Resume functionality
 - RTL (Right-to-Left) support for Hebrew interface
@@ -90,7 +90,6 @@ com.sudokuwhatsapp.game/
 - Each row must contain all digits 1-9 without repetition
 - Each column must contain all digits 1-9 without repetition
 - Each 3x3 box must contain all digits 1-9 without repetition
-- Three mistakes allowed per game
 
 ### Reminder Examples
 - "הפסקה לשתייה" (Drink water break)

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sudokuwhatsapp.game.data.models.Difficulty
 import com.sudokuwhatsapp.game.data.models.SudokuBoard
-import com.sudokuwhatsapp.game.data.models.SudokuCell
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,18 +36,11 @@ class GameViewModel : ViewModel() {
     private val _mistakes = MutableStateFlow(0)
     val mistakes: StateFlow<Int> = _mistakes.asStateFlow()
 
-    private val _isGameOver = MutableStateFlow(false)
-    val isGameOver: StateFlow<Boolean> = _isGameOver.asStateFlow()
-
     private val _wrongNumberFlash = MutableStateFlow<Pair<Int, Int>?>(null)
     val wrongNumberFlash: StateFlow<Pair<Int, Int>?> = _wrongNumberFlash.asStateFlow()
 
     // Timer job
     private var timerJob: Job? = null
-
-    companion object {
-        const val MAX_MISTAKES = 3
-    }
 
     /**
      * Start a new game with the specified difficulty
@@ -67,7 +59,6 @@ class GameViewModel : ViewModel() {
         _isPaused.value = false
         _isGameWon.value = false
         _mistakes.value = 0
-        _isGameOver.value = false
         _wrongNumberFlash.value = null
 
         // Start timer
@@ -109,12 +100,6 @@ class GameViewModel : ViewModel() {
             viewModelScope.launch {
                 delay(500)
                 _wrongNumberFlash.value = null
-            }
-
-            // Check if game over due to mistakes
-            if (_mistakes.value >= MAX_MISTAKES) {
-                _isGameOver.value = true
-                pauseGame()
             }
             return
         }
