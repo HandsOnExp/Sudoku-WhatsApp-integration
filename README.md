@@ -95,7 +95,6 @@ com.sudokuwhatsapp.game/
 - "הפסקה לשתייה" (Drink water break)
 - "מתיחה קלה" (Light stretch)
 - "הפסקת עיניים" (Eye break)
-- "זמן לקום ולהתנועע" (Time to stand and move)
 
 ## Recent Updates
 
